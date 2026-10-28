@@ -1,3 +1,4 @@
+
 ## 👥 Group Information
 - **Group Name:** Group 3
 - **Members:** Bautista, Dean Mark | Cabarles, Raiza
@@ -13,7 +14,7 @@
 ## 🔀 Flowchart
 - Embed your flowchart image here:
   ```markdown
-  ![Preprocessing Flowchart](flowchart/Topic_Flowchart_Pair1Surname_Pair2Surname.png)
+  ![Preprocessing Flowchart](Flowchart/Valorant_Champion_2025-Paris_Bautista_Cabarles.png)
   ```
 - **Decisions in our flowchart:** list each decision diamond and what you chose on each branch.
 - **Changes we made:** if the code ended up different from your first flowchart, say what changed and why.
@@ -44,6 +45,7 @@ The steps were applied in order to produce the cleaned dataset.
 1.   Run a data quality report. Compare missing values before `df_raw` and after `df_final` ; the expected result is 0.
 
 ## 📈 Visualizations
+
 - Total: **10**
 - Short description + insight for each plot.
 
