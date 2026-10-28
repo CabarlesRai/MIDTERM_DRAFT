@@ -78,6 +78,10 @@ The steps were applied in order to produce the cleaned dataset.
 * **Insight** - Kills and deaths rise together (more rounds means more of both), but the high-rating (bright) points sit below the diagonal, where kills exceed deaths.
 
 ### Plot 4: Pairplot: `rating`, `acs`, `kast`, `hs_percent` by result
+<p align="center">
+  <img width="900" alt="image" src="https://github.com/user-attachments/assets/fde7fc46-09fc-437d-95d7-08a29789dfa1" />
+</p>
+
 *  **Description** - Pairwise relationships, colored Won vs Lost
 * **Insight** - `adr` was left out because it is almost the same as `acs` (r ≈ 0.97). `rating` follows `acs` closely, and `kast` is a looser relationship
 
