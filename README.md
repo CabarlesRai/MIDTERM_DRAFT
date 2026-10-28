@@ -17,6 +17,14 @@
   ![Preprocessing Flowchart](Flowchart/Valorant_Champion_2025-Paris_Bautista_Cabarles_Flowchart.png)
   ```
 - **Decisions in our flowchart:** list each decision diamond and what you chose on each branch.
+
+| Decision | What we chose and why |
+|----------|-----------------------|
+| **Missing values?** | **Yes:** we filled `map_name` and `map_winner` with `'All maps'` (340 NaN each, same rows) and kept every row. The NaNs appear only in `stat_type = 'overall'` rows, because an overall row covers every map, so there is no single map to name. |
+| **Duplicate rows?** | **No:** `df.duplicated().sum()` found 0 duplicate rows, so nothing was dropped and the data was kept as is. |
+| **Outliers? (IQR 1.5×)** | **Yes:** we winsorized `rating`, `acs`, `adr`, `k`, `d`, `a`, `fk`, `fd` by clipping them to Q1 − 1.5·IQR and Q3 + 1.5·IQR. The values are real player performances, so we capped them instead of deleting rows. |
+| **i < 10 ?** | **Yes** for charts 1 to 9: `i = i + 1` and we draw the next chart. **No** once `i` reaches 10: all 10 charts are drawn, so we go to END. |
+
 - **Changes we made:** if the code ended up different from your first flowchart, say what changed and why.
 
 ## 🧹Preprocessing Summary
