@@ -14,7 +14,7 @@
 ## 🔀 Flowchart
 - Embed your flowchart image here:
   ```markdown
-  ![Preprocessing Flowchart](Flowchart/Valorant_Champion_2025-Paris_Bautista_Cabarles.png)
+  ![Preprocessing Flowchart](Flowchart/Valorant_Champion_2025-Paris_Bautista_Cabarles_Flowchart.png)
   ```
 - **Decisions in our flowchart:** list each decision diamond and what you chose on each branch.
 - **Changes we made:** if the code ended up different from your first flowchart, say what changed and why.
