@@ -14,7 +14,7 @@
 ## 🔀 Flowchart
 - Embed your flowchart image here:
   ```markdown
-  ![Preprocessing Flowchart](Flowchart/Valorant_Champion_2025-Paris_Bautista_Cabarles_Flowchart.png)
+  ![Preprocessing Flowchart](VCT Paris 2025_Bautista_Cabarles.drawio.png)
   ```
 - **Decisions in our flowchart:**
   
