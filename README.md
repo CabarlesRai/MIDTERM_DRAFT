@@ -13,9 +13,8 @@
 
 ## 🔀 Flowchart
 - Embed your flowchart image here:
-  ```markdown
-  ![Preprocessing Flowchart](VCT Paris 2025_Bautista_Cabarles.drawio.png)
-  ```
+![Preprocessing Flowchart](images/VCT%20Paris%202025_Flowchart_Bautista_Cabarles_page-0001.jpg)
+
 - **Decisions in our flowchart:**
   
 | Decision | What we chose and why |
