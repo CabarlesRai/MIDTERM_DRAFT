@@ -8,7 +8,7 @@
 - **Dataset Title:** Valorant Champions Tour Paris 2025 
 - **Source (URL or reference):** https://www.kaggle.com/datasets/piyush86kumar/valorant-champions-tour-2025-paris
 - **License/Attribution:** Attribution 4.0 International (CC BY 4.0)
-- **Objective:** (1 or 2 sentences about what you want to show with this dataset)
+- **Objective:** This dataset analyzes player performance, agent selection, and team statistics across all regions in the VCT 2025 Paris events. It aims to identify top-performing players, effective agents, and key performance indicators, such as ACS, K/D difference, and first kills, that may influence match outcomes.
 
 ## 🔀 Flowchart
 - Embed your flowchart image here:
