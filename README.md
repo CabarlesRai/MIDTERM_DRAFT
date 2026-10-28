@@ -19,7 +19,7 @@
 - **Changes we made:** if the code ended up different from your first flowchart, say what changed and why.
 
 ## 🧹Preprocessing Summary
-- List preprocessing steps you applied, in the same order as your flowchart.
+The steps were applied in order to produce the cleaned dataset. 
 1.  Initialize the dataset by importing necessary libraries and creating an output folder.
 2.  Load the CSV file.
 1.   Inspect the data shape (1,220 rows × 26 columns), types, and summary statistics.
