@@ -26,6 +26,18 @@
 | **i < 10 ?** | **Yes** for charts 1 to 9: `i = i + 1` and we draw the next chart. **No** once `i` reaches 10: all 10 charts are drawn, so we go to END. |
 
 - **Changes we made:** if the code ended up different from your first flowchart, say what changed and why.
+The final code differs from our first flowchart in the following ways.
+
+| Initial Flowchart | Final Flowchart | Why we changed it |
+|---|---|---|
+| The code one-hot encodes `stat_type`, `map_name`, `map_winner`, `event_stage`, `player_team`, `team1` and `team2`, multi-hot encodes `agent`, and drops `event_name`. | The code only drops `event_name` and one-hot encodes `stat_type`. | The charts and PCA use numeric stats, so the extra map, team, stage and agent encodings would only add many sparse columns. |
+| The code saves each chart as `figures/viz_{i}.png`. | The code no longer saves the charts as PNG files. | Charts display inline in Colab, so saving PNG files was not needed. |
+| There's no code to keep a raw copy of the data. | Added code to keep a raw copy of the data: `df_raw = df.copy()`. | Needed to compare raw data against cleaned data in the Data Quality Report and the missingness chart (chart 6). |
+| There's no code to keep a copy of the data before winsorizing. | Added `df_before_outliers = df.copy()` right before winsorizing. | Chart 8 (boxplot) compares the data before and after outlier handling. |
+| The code winsorizes the outliers and then moves straight on to encoding. | Added a snapshot, `df_clean = df.copy()`, taken before encoding and scaling. | The charts need a readable version of the data before encoding or scaling. |
+| There's no data quality report. | Added a Data Quality Report that compares missing values in `df_raw` and `df_final`, expecting 0 after cleaning. | Added to show that the cleaning removed all missing values. |
+| There's no code to prepare a separate dataset for the charts. | Added code that takes the overall rows of `df_clean` and creates a Won/Lost `result` column. | Gives every chart one consistent subset and a Won/Lost label. |
+| The loop draws 10 charts from `df_clean`, filtered by `stat_type`. | The loop draws 10 named charts, and each one uses `overall`, `df_final`, `df_raw` or `df_before_outliers` as needed. | The chart list was finalized, and each chart uses the dataframe that suits it. |
 
 ## 🧹Preprocessing Summary
 The steps were applied in order to produce the cleaned dataset. 
