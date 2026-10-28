@@ -45,9 +45,50 @@ The steps were applied in order to produce the cleaned dataset.
 1.   Run a data quality report. Compare missing values before `df_raw` and after `df_final` ; the expected result is 0.
 
 ## 📈 Visualizations
+**Plot 1 : Histogram + KDE: `rating` by result**
 
-- Total: **10**
-- Short description + insight for each plot.
+
+*   **Description** - Distribution of player rating (overall rows), Won vs Lost
+*  **Insight** - Rating is roughly bell-shaped and centered near 1.0 (median 0.97), with most player-matches between 0.85 and 1.14 and a slight right skew.
+
+**Plot 2 : KDE: `acs` before vs after scaling**
+
+
+*   **Description** - Density of Average Combat Score, raw and standardized
+*   **Insight** - The two panels have the same shape. Scaling only moves the center to 0 and the spread to 1, so ACS can be compared fairly with the other scaled columns.
+
+**Plot 3: Scatter: kills vs deaths**
+*  **Description** - Each dot is a player-match, colored by rating
+* **Insight** - Kills and deaths rise together (more rounds means more of both), but the high-rating (bright) points sit below the diagonal, where kills exceed deaths.
+
+**Plot 4: Pairplot: `rating`, `acs`, `kast`, `hs_percent` by result**
+*  **Description** - Pairwise relationships, colored Won vs Lost
+* **Insight** - `adr` was left out because it is almost the same as `acs` (r ≈ 0.97). `rating` follows `acs` closely, and `kast` is a looser relationship
+
+**Plot 5: Correlation heatmap (lower triangle)**
+*  **Description** - Pearson correlation of the numeric stats
+* **Insight** - `rating` is most tied to `kd_diff` (0.90), `acs` (0.85) and `adr` (0.83). Assists barely matter (0.03), and deaths pull rating down (-0.21).
+
+**Plot 6: Missingness plot: before vs after**
+*  **Description** - Missing cells in `df_raw` and in `df_final`
+* **Insight** - Before: only `map_name` and `map_winner` have gaps (340 rows each), and they are the same rows, the overall stat rows. After: the second panel has no missing cells, so filling with 'All maps' removed every gap without dropping any row.
+
+**Plot 7: Countplot: records per `event_stage`**
+*  **Description** - Player-match records per tournament stage (overall rows)
+* **Insight** - Each stage now appears as one clean label (the newline/tab junk was removed in Step 6). Stages with more matches have more records.
+
+**Plot 8: Boxplot: `acs` and `k` before vs after winsorizing**
+*  **Description** - Spread and outliers, before and after the clip
+* **Insight** - The extreme points above the whisker in the Before box are pulled to the upper limit in the After box, while the box and median barely move. Winsorizing caps the extremes without changing the typical player.
+
+**Plot 9: Line plot: matches per date**
+*  **Description** - Number of matches played on each date
+* **Insight** - Shows the tournament schedule: busy days and rest days.
+  
+**Plot 10: PCA scatter by result**
+*  **Description** - The 12 scaled stats projected to 2 components, colored Won vs Lost	
+* **Insight** - PC1 captures the most variance (the percentage is in the axis label).
+
 
 ## 💡Key Insights
 - 3 to 5 main findings from your data.
