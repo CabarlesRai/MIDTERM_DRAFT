@@ -52,51 +52,80 @@ The steps were applied in order to produce the cleaned dataset.
 2.   Save:  Export the cleaned dataset to `data/vct_paris_cleaned.csv`
 1.   Run a data quality report. Compare missing values before `df_raw` and after `df_final` ; the expected result is 0.
 
-## 📈 Visualizations
-**Plot 1 : Histogram + KDE: `rating` by result**
 
+## 📈 Visualizations
+### Plot 1: Histogram + KDE: `rating` by result
+<p align="center">
+  <img width="800" alt="image" src="https://github.com/user-attachments/assets/2679a0c5-d777-4aea-bc1d-54dafb241008" />
+</p>
 
 *   **Description** - Distribution of player rating (overall rows), Won vs Lost
 *  **Insight** - Rating is roughly bell-shaped and centered near 1.0 (median 0.97), with most player-matches between 0.85 and 1.14 and a slight right skew.
 
-**Plot 2 : KDE: `acs` before vs after scaling**
-
-
+### Plot 2: KDE: `acs` before vs after scaling
+<img width="1431" height="537" alt="image" src="https://github.com/user-attachments/assets/e7aa6cc3-9281-4871-88f8-9cb88eab02cc" />
+<p align="center">
+  
 *   **Description** - Density of Average Combat Score, raw and standardized
 *   **Insight** - The two panels have the same shape. Scaling only moves the center to 0 and the spread to 1, so ACS can be compared fairly with the other scaled columns.
 
-**Plot 3: Scatter: kills vs deaths**
+### Plot 3: Scatter: kills vs deaths
+<p align="center">
+  <img width="700" alt="image" src="https://github.com/user-attachments/assets/4f732b9a-9631-46d7-8258-c95ff358310f" />
+</p>
+
 *  **Description** - Each dot is a player-match, colored by rating
 * **Insight** - Kills and deaths rise together (more rounds means more of both), but the high-rating (bright) points sit below the diagonal, where kills exceed deaths.
 
-**Plot 4: Pairplot: `rating`, `acs`, `kast`, `hs_percent` by result**
+### Plot 4: Pairplot: `rating`, `acs`, `kast`, `hs_percent` by result
 *  **Description** - Pairwise relationships, colored Won vs Lost
 * **Insight** - `adr` was left out because it is almost the same as `acs` (r ≈ 0.97). `rating` follows `acs` closely, and `kast` is a looser relationship
 
-**Plot 5: Correlation heatmap (lower triangle)**
+### Plot 5: Correlation heatmap (lower triangle)
+<p align="center">
+  <img width="700" alt="image" src="https://github.com/user-attachments/assets/2b2cbb84-98ee-47bb-aeab-69bab578dc8a" />
+</p>
+
 *  **Description** - Pearson correlation of the numeric stats
 * **Insight** - `rating` is most tied to `kd_diff` (0.90), `acs` (0.85) and `adr` (0.83). Assists barely matter (0.03), and deaths pull rating down (-0.21).
 
-**Plot 6: Missingness plot: before vs after**
+### Plot 6: Missingness plot: before vs after
+<img width="1722" height="617" alt="image" src="https://github.com/user-attachments/assets/491381bc-bedb-4cdf-b27d-75e16091b9be" />
+<p align="center">
+  
 *  **Description** - Missing cells in `df_raw` and in `df_final`
 * **Insight** - Before: only `map_name` and `map_winner` have gaps (340 rows each), and they are the same rows, the overall stat rows. After: the second panel has no missing cells, so filling with 'All maps' removed every gap without dropping any row.
 
-**Plot 7: Countplot: records per `event_stage`**
+### Plot 7: Countplot: records per `event_stage`
+<img width="1408" height="592" alt="image" src="https://github.com/user-attachments/assets/7ca6d167-c63e-45c1-9156-b901d777687f" />
+<p align="center">
+
 *  **Description** - Player-match records per tournament stage (overall rows)
 * **Insight** - Each stage now appears as one clean label (the newline/tab junk was removed in Step 6). Stages with more matches have more records.
 
-**Plot 8: Boxplot: `acs` and `k` before vs after winsorizing**
+### Plot 8: Boxplot: `acs` and `k` before vs after winsorizing
+<p align="center">
+  <img width="880" alt="image" src="https://github.com/user-attachments/assets/ba54a4d9-5fc7-4d80-a865-15a258eda098" />
+</p>
+
 *  **Description** - Spread and outliers, before and after the clip
 * **Insight** - The extreme points above the whisker in the Before box are pulled to the upper limit in the After box, while the box and median barely move. Winsorizing caps the extremes without changing the typical player.
 
-**Plot 9: Line plot: matches per date**
+### Plot 9: Line plot: matches per date
+<p align="center">
+  <img width="880" alt="image" src="https://github.com/user-attachments/assets/b7105312-4d0d-4f46-bff2-f42893fa5453" />
+</p>
+
 *  **Description** - Number of matches played on each date
 * **Insight** - Shows the tournament schedule: busy days and rest days.
   
-**Plot 10: PCA scatter by result**
+### Plot 10: PCA scatter by result
+<p align="center">
+  <img width="800" alt="image" src="https://github.com/user-attachments/assets/0bcc5ee0-73a0-4720-a45d-9f0e0993c8ea" />
+</p>
+
 *  **Description** - The 12 scaled stats projected to 2 components, colored Won vs Lost	
 * **Insight** - PC1 captures the most variance (the percentage is in the axis label).
-
 
 ## 💡Key Insights
 - 3 to 5 main findings from your data.
