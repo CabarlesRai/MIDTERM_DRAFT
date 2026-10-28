@@ -23,21 +23,25 @@ The steps were applied in order to produce the cleaned dataset.
 1.  Initialize the dataset by importing necessary libraries and creating an output folder.
 2.  Load the CSV file.
 1.   Inspect the data shape (1,220 rows × 26 columns), types, and summary statistics.
-2.   Check for missing values. There are 680 NaNs (340 each in `map_name` and `map_winner`), all in stat_type = 'overall' rows, so every row is kept. They are filled with `All maps` instead of dropping rows or imputing a median or mode. 
-1.   Check for Duplicate Rows. If any exist, `drop_duplicates()`, keep the first copy and reset the index. 
-2. Fix data types:
+2.   Keep a raw copy (used later for quality report ansd chart 6).
+1.   Check for missing values. There are 680 NaNs (340 each in `map_name` and `map_winner`), all in stat_type = 'overall' rows, so every row is kept. They are filled with `All maps` instead of dropping rows or imputing a median or mode.
+2.   Check for Duplicate Rows. If any exist, `drop_duplicates()`, keep the first copy and reset the index.
+1.   Fix data types:
     - `match_date` → converted to datetime
     - `kast`, `hs_percent` → `%` stripped and converted to float
     - `event_stage` → newline/tab junk stripped
     - `score_overall` (e.g. "2 - 0") → split into 2 integer columns
-1.  Outliers: Outliers in `rating`, `acs`, `adr`, `k`, `d`, `a`, `fk`, and `fd` are detected with the `IQR 1.5× rule` and winsorized, clipped to `Q1 − 1.5·IQR` and `Q3 + 1.5·IQR`, so no rows are removed.
-2. Categorical Encoding:
-      - One-hot encode `stat_type`
-      - Drop `event_name` (constant)
+2.   Keep a copy before winsorizing (`df_before_outliers = df.copy()`), used by chart 8.
+1.   Outliers: Outliers in rating, acs, adr, k, d, a, fk, and fd are detected with the `IQR 1.5× rule` and winsorized, clipped to `Q1 − 1.5·IQR` and `Q3 + 1.5·IQR`, so no rows are removed.
+2.   Take a snapshot `df_clean = df.copy()` before encoding and scaling, used by the charts.
+1.   Encode categorical columns:
+      - Create `df_final` from `df_clean` without `event_name` (constant)
+      - One-hot encode `stat_type` only
+      - Keep the other text columns as labels
 
 1.   Scaling: `rating`, `acs`, `k`, `d`, `a`, `kd_diff`, `kast`, `adr`, `hs_percent`, `fk`, `fd` was scaled using Standardscaler.
-
-2. Save:  Export the cleaned dataset to `data/vct_paris_cleaned.csv`
+2.   Save:  Export the cleaned dataset to `data/vct_paris_cleaned.csv`
+1.   Run a data quality report. Compare missing values before `df_raw` and after `df_final` ; the expected result is 0.
 
 ## 📈 Visualizations
 - Total: **10**
