@@ -13,7 +13,7 @@
 
 ## 🔀 Flowchart
 
-![Preprocessing Flowchart](images/VCT%20Paris%202025_Flowchart_Bautista_Cabarles_page-0001.jpg)
+![Preprocessing Flowchart](images/final FLOWCHART 1.drawio_page-0001.jpg)
 
 > ### Decisions Summary
   
