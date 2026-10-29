@@ -163,10 +163,11 @@ The steps were applied in order to produce the cleaned dataset.
 
 ## 💡Key Insights
 1. **Performance is centered at average.** Player rating averages about 0.99, with most players between 0.85 and 1.14.
-2. **Rating is driven by damage and kill balance**, not assists. `kd_diff`, `acs` and `adr` show the strongest links with rating.
+2. **Rating is driven by damage and kill balance**, not assists. `kd_diff`, `acs` and `adr` show the strongest links with rating, while `assists` are almost unrelated.
 3. **The only missing data was structural.** `map_name` and `map_winner` were empty exactly where the stats cover all maps combined, so nothing was lost by filling them.
-4. **Winners and losers differ in rating.** Charts 1, 4 and 10 compare players by match result.
-5. **Preprocessing changed the scale, not the story.** Chart 2 shows scaling keeps the shape of ACS, and chart 8 shows winsorizing only caps the extreme tail.
+4. **Winners and losers differ in rating.** Chart 3 compares players by match result: below about -10 `kd_diff` almost every point is a lost map, and above about 10 almost every point is a win.
+5. **Preprocessing changed the scale, not the story.** Chart 8 uses the pre-winsorized data, so star performances stay visible (Sova's tail reaches higher than 2.5), and winsorizing only capped the extreme tail.
+
 ## 🚀 How to Run
 - Open the notebook in Google Colab.
 - Install dependencies from `requirements.txt`.
