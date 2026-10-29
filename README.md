@@ -51,109 +51,115 @@ The final code differs from our first flowchart in the following ways.
 ## 🧹Preprocessing Summary
 The steps were applied in order to produce the cleaned dataset. 
 1.  Initialize the dataset by importing necessary libraries and creating an output folder.
-2.  Load the CSV file.
-1.   Inspect the data shape (1,220 rows × 26 columns), types, and summary statistics.
-2.   Keep a raw copy (used later for quality report ansd chart 6).
-1.   Check for missing values. There are 680 NaNs (340 each in `map_name` and `map_winner`), all in stat_type = 'overall' rows, so every row is kept. They are filled with `All maps` instead of dropping rows or imputing a median or mode.
-2.   Check for Duplicate Rows. If any exist, `drop_duplicates()`, keep the first copy and reset the index.
-1.   Fix data types:
+2.  Upload and Load the CSV file.
+3.   Inspect the data shape , types, and summary statistics.
+4.   Keep a raw copy (used later for quality report ansd chart 6).
+5.   Check for missing values. There are 680 NaNs (340 each in `map_name` and `map_winner`), all in stat_type = 'overall' rows, so every row is kept. They are filled with `All maps` instead of dropping rows or imputing a median or mode.
+6.   Check for Duplicate Rows. If any exist, `drop_duplicates()`, keep the first copy and reset the index.
+7. Fix data types:
     - `match_date` → converted to datetime
     - `kast`, `hs_percent` → `%` stripped and converted to float
-    - `event_stage` → newline/tab junk stripped
-    - `score_overall` (e.g. "2 - 0") → split into 2 integer columns
-2.   Keep a copy before winsorizing (`df_before_outliers = df.copy()`), used by chart 8.
-1.   Outliers: Outliers in rating, acs, adr, k, d, a, fk, and fd are detected with the `IQR 1.5× rule` and winsorized, clipped to `Q1 − 1.5·IQR` and `Q3 + 1.5·IQR`, so no rows are removed.
-2.   Take a snapshot `df_clean = df.copy()` before encoding and scaling, used by the charts.
-1.   Encode categorical columns:
-      - Create `df_final` from `df_clean` without `event_name` (constant)
+    - `event_stage` → newline/tab junk removed
+    - `score_overall` (e.g. "2 - 0") → split into two integer columns
+
+8. Display the data types and the first rows after fixing
+9.   Select outlier columns: `rating`, `acs`, `adr`, `k`, `d`, `a`, `fk`, `fd`. Keep a copy as `df_before_outliers`.
+10.  IQR: Compute `Q1`, `Q3`, `IQR`, and the bounds `Q1 − 1.5·IQR, Q3 + 1.5·IQR` per column, separately for each stat_type (overall vs. map). Count the outliers and display the results.
+11. Outliers Present?:
+   - `Yes` → winsorize by clipping each value to its bound.. These are real player stats, so every row is kept. Then display a confirmation message with `len(df)`
+   - `No`  → skip this step
+12.   Take a snapshot `df_clean = df.copy()` before encoding and scaling, used by the charts.
+13.   Encode categorical columns:
+      - Drop the constant `event_name`
       - One-hot encode `stat_type` only
       - Keep the other text columns as labels
+      - Display the encoded columns
+14.   Scaling: `rating`, `acs`, `k`, `d`, `a`, `kd_diff`, `kast`, `adr`, `hs_percent`, `fk`, `fd`and `fk_fd_diff` was scaled using Standardscaler. Display the scaled dataset.
+15.   Save:  Export the cleaned dataset to `data/vct_paris_cleaned.csv`
+16.   Verify: Display the shape of the saved file and should match `df_final`
+17.   Run a data quality report. Compare missing values before `df_raw` and after `df_final` ; the expected result is 0.
 
-1.   Scaling: `rating`, `acs`, `k`, `d`, `a`, `kd_diff`, `kast`, `adr`, `hs_percent`, `fk`, `fd` was scaled using Standardscaler.
-2.   Save:  Export the cleaned dataset to `data/vct_paris_cleaned.csv`
-1.   Run a data quality report. Compare missing values before `df_raw` and after `df_final` ; the expected result is 0.
 
 
 ## 📈 Visualizations
-### Plot 1: Histogram + KDE: `rating` by result
+### **Plot 1 : Histogram - Distribution of ACS by Playoff Team**
 <p align="center">
-  <img width="696" height="479" alt="kde" src="https://github.com/user-attachments/assets/6eb6b484-f178-47c6-9c59-fc6e42db8092" />
+  <img width="1222" height="694" alt="1  kde" src="https://github.com/user-attachments/assets/6e553812-a396-4223-860b-6b92dbfbb344" />
 </p>
 
-*   **Description** - Distribution of player rating (overall rows), Won vs Lost
-*  **Insight** - Rating is roughly bell-shaped and centered near 1.0 (median 0.97), with most player-matches between 0.85 and 1.14 and a slight right skew.
+*   **Description** - The distribution of Average Combat Score `(ACS)` for the eight playoff teams. The x-axis is `ACS` (about 50 to 330), and the y-axis is density.
+*  **Insight** - A curve shifted to the right means higher typical `ACS`; a wider spread means less consistent scoring. Where the semi-transparent bars overlap, the two teams score similarly.
 
-### Plot 2: KDE: `acs` before vs after scaling
-  <p align="center">
-  <img width="1084" height="443" alt="2" src="https://github.com/user-attachments/assets/0c58bf5a-5127-4c2c-9b6c-4886228e7081" />
-</p>
-
-*   **Description** - Density of Average Combat Score, raw and standardized
-*   **Insight** - The two panels have the same shape. Scaling only moves the center to 0 and the spread to 1, so ACS can be compared fairly with the other scaled columns.
-
-### Plot 3: Scatter: kills vs deaths
+### **Plot 2 : KDE: Density Distribution of Player Ratings by Map**
 <p align="center">
-  <img width="687" height="556" alt="3" src="https://github.com/user-attachments/assets/4e50b83b-6a41-4fa2-985d-8f5b0ceaef06" />
+  <img width="1112" height="650" alt="Density Distribution of Player Ratings by Map" src="https://github.com/user-attachments/assets/cc6ec917-6cb9-404b-869f-0183165e60f6" />
 </p>
 
-*  **Description** - Each dot is a player-match, colored by rating
-* **Insight** - Kills and deaths rise together (more rounds means more of both), but the high-rating (bright) points sit below the diagonal, where kills exceed deaths.
+*   **Description** - Smoothed KDE curves of player rating for seven maps, with rating on the x-axis (about 0 to 2.2) and density on the y-axis.
+*   **Insight** - Each curve is one map. Curves with a peak further right mean higher typical ratings on that map; a flatter curve means a wider spread of player performances.
 
-### Plot 4: Pairplot: `rating`, `acs`, `kast`, `hs_percent` by result
+### **Plot 3: Scatter Plot — Relationship Between Kill-Death Difference and Rating by Outcome**
 <p align="center">
-  <img width="685" height="617" alt="4" src="https://github.com/user-attachments/assets/cf361395-4b0b-4f27-8b11-55229de71e5d" />
+  <img width="1002" height="672" alt="Scatter Plot: Kill-Death Difference vs Rating by Outcome" src="https://github.com/user-attachments/assets/c2a5fdae-3119-44ff-b57d-47d34b53215b" />
 </p>
 
-*  **Description** - Pairwise relationships, colored Won vs Lost
-* **Insight** - `adr` was left out because it is almost the same as `acs` (r ≈ 0.97). `rating` follows `acs` closely, and `kast` is a looser relationship
+*  **Description** - Each point is a player-map performance, colored by whether that player's team won or lost the map.
+* **Insight** - Points trending up and to the right mean a better kill–death difference goes with a higher rating. Compare the teal (Won) and orange (Lost) clouds to see how far winners separate from losers.
 
-### Plot 5: Correlation heatmap (lower triangle)
+### **Plot 4: Bar Plot — Agent Pick Frequency Across All Maps**
 <p align="center">
-  <img width="856" height="755" alt="5" src="https://github.com/user-attachments/assets/17d2e8c7-35c3-4845-9973-f8bc035edc7f" />
+  <img width="1497" height="672" alt="Bar Plot: Agent Pick Frequency Across All Maps" src="https://github.com/user-attachments/assets/a5ba4191-d9bc-47c9-9859-218728708427" />
 </p>
 
-*  **Description** - Pearson correlation of the numeric stats
-* **Insight** - `rating` is most tied to `kd_diff` (0.90), `acs` (0.85) and `adr` (0.83). Assists barely matter (0.03), and deaths pull rating down (-0.21).
+*  **Description** - Chart shows how often each agent was picked across all maps. The x-axis lists 23 agents, the y-axis shows pick count and the five most-picked agents are highlighted.
+* **Insight** - Bars are sorted from the most to the least picked agent. The dark bars are the top 5 agents reused in charts 5 and 8.
 
-### Plot 6: Missingness plot: before vs after
+### **Plot 5: Pair Plot — Survival and Support Performance by Top 5 Agent**
 <p align="center">
-  <img width="1384" height="492" alt="6" src="https://github.com/user-attachments/assets/afabd4c4-f264-4140-90d0-240d2e5893ce" />
+  <img width="995" height="911" alt="Pair Plot of Player Performance Metrics" src="https://github.com/user-attachments/assets/507ad2af-7a68-419e-849b-3947b90c2283" />
 </p>
-  
-*  **Description** - Missing cells in `df_raw` and in `df_final`
-* **Insight** - Before: only `map_name` and `map_winner` have gaps (340 rows each), and they are the same rows, the overall stat rows. After: the second panel has no missing cells, so filling with 'All maps' removed every gap without dropping any row.
 
-### Plot 7: Countplot: records per `event_stage`
+*  **Description** - The plot uses deaths, assists, KAST, and ADR for the five most frequently picked agents.
+* **Insight** - The diagonal shows each metric's distribution per agent; the off-diagonal panels show how two metrics relate. Look for agent colours that cluster apart from the others.
+
+### **Plot 6: Correlation Heatmap — Correlation Between Overall Combat Performance Metrics**
 <p align="center">
-  <img width="1053" height="479" alt="7" src="https://github.com/user-attachments/assets/59b65768-d6b3-4e7b-8ad2-5b319389cb5f" />
+  <img width="1023" height="892" alt="Heatmap of Player Performance Metrics" src="https://github.com/user-attachments/assets/01609455-8537-4576-a0a2-6fb89228d382" />
 </p>
 
-*  **Description** - Player-match records per tournament stage (overall rows)
-* **Insight** - Each stage now appears as one clean label (the newline/tab junk was removed in Step 6). Stages with more matches have more records.
+*  **Description** - Pearson correlations are calculated from overall player rows. Only the lower triangle is shown, so each pair appears once, and derived difference metrics are excluded to avoid redundant comparisons.
+* **Insight** - Red cells are positive correlations and blue cells are negative ones; the darker the colour, the stronger the relationship `(r close to ±1)`. Only the lower triangle is shown.
 
-### Plot 8: Boxplot: `acs` and `k` before vs after winsorizing
+### **Plot 7: Missingness Plot — Before vs After**
 <p align="center">
-  <img width="983" height="492" alt="8" src="https://github.com/user-attachments/assets/405ca912-1acc-4bd8-a390-35a9aab49766" />
+  <img width="1772" height="848" alt="Missingness Plot of the Dataset Before Cleaning" src="https://github.com/user-attachments/assets/d8be2e27-dbbe-42b1-8e6c-0c4ad2c4d4fb" />
 </p>
 
-*  **Description** - Spread and outliers, before and after the clip
-* **Insight** - The extreme points above the whisker in the Before box are pulled to the upper limit in the After box, while the box and median barely move. Winsorizing caps the extremes without changing the typical player.
+*  **Description** - Each column of the dataset is one vertical strip and each row is one record; black cells are missing values. The left panel is the raw data `(df_raw)` and the right panel is the cleaned data `(df_final)`. Columns with gaps are labelled with their % missing. Column names are rotated 90° and centred under their own strip so both panels line up.
+* **Insight** - Each vertical strip is one column and each row is one record. Black cells in the left panel are the gaps in the raw data; the right panel should contain none.
 
-### Plot 9: Line plot: matches per date
+### **Plot 8: Violin Plot — Player Rating Distribution by Top 5 Agent**
 <p align="center">
-  <img width="1011" height="537" alt="9" src="https://github.com/user-attachments/assets/e11c2821-3ae1-4c53-91e3-a9cc0115d1d1" />
+  <img width="1112" height="672" alt="Violin Plot of Player Performance Distribution" src="https://github.com/user-attachments/assets/509f7f41-275a-4fa7-868d-01a4498c1b01" />
 </p>
 
-*  **Description** - Number of matches played on each date
-* **Insight** - Shows the tournament schedule: busy days and rest days.
-  
-### Plot 10: PCA scatter by result
+*  **Description** - Each violin shows the full shape of an agent's rating distribution, with the box inside marking the median and the middle 50%. Agents are ordered from the highest to the lowest median rating. This uses the pre-winsorized data, so star performances stay visible in the tails.
+* **Insight** - Wider parts of a violin mean more players at that rating. The inner box marks the median and middle 50%, and the long tails show the star (or poor) performances kept by using pre-winsorized data. 
+### **Plot 9: Temporal Line Plot — Team Average Rating by Event Stage**
 <p align="center">
-  <img width="699" height="556" alt="10" src="https://github.com/user-attachments/assets/a98e270b-1826-44cb-8f06-419ee15c0e99" />
+  <img width="1277" height="694" alt="Temporal Line Plot of Player Performance Over Time" src="https://github.com/user-attachments/assets/c0c46029-7586-4f5e-9d4c-c152d4dc8956" />
 </p>
 
-*  **Description** - The 12 scaled stats projected to 2 components, colored Won vs Lost	
-* **Insight** - PC1 captures the most variance (the percentage is in the axis label).
+*  **Description** - The x-axis follows the tournament stage order determined by each stage's first match date. The eight most active teams are shown to avoid a crowded legend.
+* **Insight** - Each line is one team. Rising lines mean a team's players performed better as the event went on; the grey band marks the playoff stages.
+
+### **Plot 10: Team Heatmap — Team Performance Profiles**
+<p align="center">
+  <img width="946" height="846" alt="Team Heatmap of Playoff Team Performance" src="https://github.com/user-attachments/assets/fdae0edc-a476-45d8-842a-d468d28448e3" />
+</p>
+
+*  **Description** - Each cell shows a team's mean metric standardized across teams (z-score within each metric). This puts `rating`, `ACS`, `ADR`, and `KAST` on a comparable color scale.
+* **Insight** - Red cells are above the all-team average for that metric and blue cells are below it. Teams are sorted with the strongest overall profile at the top.
 
 ## 💡Key Insights
 1. **Performance is centered at average.** Player rating averages about 0.99, with most players between 0.85 and 1.14.
