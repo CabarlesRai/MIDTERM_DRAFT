@@ -145,7 +145,7 @@ The steps were applied in order to produce the cleaned dataset.
 </p>
 
 *  **Description** - Each violin shows the full shape of an agent's rating distribution, with the box inside marking the median and the middle 50%. Agents are ordered from the highest to the lowest median rating. This uses the pre-winsorized data, so star performances stay visible in the tails.
-* **Insight** - It shows that player ratings are concentrated around 1.0, while some extend toward 1.5 and above. `Yoru` has wider distribution while `Sova`has the highest peak.
+* **Insight** - Player ratings for all five agents are mostly concentrated around 0.9–1.1. Sova has some of the highest individual ratings, reaching above 2.0, meaning some players using `Sova` achieved exceptionally high ratings. Meanwhile, `Yoru` has the widest distribution, meaning player ratings vary more widely, from lower to higher values, compared with the other agents.
 
 ### **Plot 9: Temporal Line Plot — Team Average Rating by Event Stage**
 <p align="center">
@@ -153,7 +153,7 @@ The steps were applied in order to produce the cleaned dataset.
 </p>
 
 *  **Description** - The x-axis follows the tournament stage order determined by each stage's first match date. The eight most active teams are shown to avoid a crowded legend.
-* **Insight** - EThe line plot shows that team average rating varies across event stages. `NRG` and `MIBR` reach the highest rating between 1.2-1.3. `GIANTX` experinces a notable drop during the playoffs.
+* **Insight** - The line plot shows that team average ratings fluctuate across event stages, with `NRG` achieving the highest rating of 1.30 and winning the event against `FNATIC`. Meanwhile, `MIBR` reaches around 1.25, while `GIANTX` experiences a significant drop during the playoffs.
 
 ### **Plot 10: Team Heatmap — Team Performance Profiles**
 <p align="center">
