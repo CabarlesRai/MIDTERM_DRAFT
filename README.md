@@ -13,7 +13,13 @@
 
 ## 🔀 Flowchart
 
-![Preprocessing Flowchart](images/final FLOWCHART 1.drawio_page-0001.jpg)
+![Flowchart 1: Data Preprocessing](images/final%20FLOWCHART%201.drawio_page-0001.jpg)
+
+---
+
+![Flowchart 2: Data Visualization](images/final%20Flowchart_2_Visualization.drawio_page-0001.jpg)
+
+---
 
 > ### Decisions Summary
   
@@ -26,6 +32,8 @@ Flowchart 1 (Data Preprocessing) has five decision diamonds. Flowchart 2 (Data V
 | 3 | **Are outliers present?**  | **Yes**: **winsorize**, clipping each value to `Q1 − 1.5·IQR` and `Q3 + 1.5·IQR`, with bounds computed separately for each `stat_type`. All rows are kept.| The extreme values are real player performances, so deleting the rows would throw away genuine data. Capping limits their pull on means, correlations and scaling. Bounds are separate for `overall` and `map` rows because totals like `k`, `d` and `a` are naturally larger for an overall row (all maps combined); one shared bound would wrongly flag those rows. A pre-winsorizing copy (`df_before_outliers`) lets chart 8 still show the real star performances. |
 | 4 | **Are the variables categorical?**  | **Yes**: drop `event_name` and one-hot encode **`stat_type` only** (`stat_type_map`, `stat_type_overall`). | `stat_type` changes what every row *means* (all maps vs. a single map) and has only 2 values, so it adds just 2 columns. `event_name` has a single value, so it carries no information. The remaining columns (team, agent, map, stage) stay as readable text labels so charts, legends and tables show real names, and encoding them would add many columns without improving the results. |
 | 5 | **Are the variables numerical?**  | **Yes**: apply **StandardScaler** (mean 0, std 1) to the 12 performance columns (`rating, acs, k, d, a, kd_diff, kast, adr, hs_percent, fk, fd, fk_fd_diff`), then check that mean ≈ 0 and std ≈ 1. | The metrics sit on very different scales (e.g. `acs` in the hundreds vs. `rating` near 1), so standardizing puts them on equal footing for comparison. `match_id`, `player_id` and the one-hot columns are **not** scaled, because they are identifiers or 0/1 flags. Most charts use `df_clean` (taken before scaling) so the axes stay in real units. |
+
+----
 
 > ### Changes Summary
   
