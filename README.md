@@ -133,7 +133,7 @@ The steps were applied in order to produce the cleaned dataset.
 
 ### **Plot 7: Missingness Plot — Before vs After**
 <p align="center">
-  <img width="1772" height="848" alt="Missingness Plot of the Dataset Before Cleaning" src="https://github.com/user-attachments/assets/d8be2e27-dbbe-42b1-8e6c-0c4ad2c4d4fb" />
+  <img width="1740" height="649" alt="7  MISSINGNESS" src="https://github.com/user-attachments/assets/28191446-3623-4a3e-925a-eecbbbdfdb9b" />
 </p>
 
 *  **Description** - Each column of the dataset is one vertical strip and each row is one record; black cells are missing values. The left panel is the raw data `(df_raw)` and the right panel is the cleaned data `(df_final)`. Columns with gaps are labelled with their % missing. Column names are rotated 90° and centred under their own strip so both panels line up.
