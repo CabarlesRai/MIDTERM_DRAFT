@@ -12,32 +12,33 @@
 - **Objective:** This dataset analyzes player performance, agent selection, and team statistics across all regions in the VCT 2025 Paris events. It aims to identify top-performing players, effective agents, and key performance indicators, such as ACS, K/D difference, and first kills, that may influence match outcomes.
 
 ## 🔀 Flowchart
-- Embed your flowchart image here:
+
 ![Preprocessing Flowchart](images/VCT%20Paris%202025_Flowchart_Bautista_Cabarles_page-0001.jpg)
 
-- **Decisions in our flowchart:**
+> ### Decisions Summary
   
-| Decision | What we chose and why |
-|----------|-----------------------|
-| **Missing values?** | **Yes:** we filled `map_name` and `map_winner` with `'All maps'` (340 NaN each, same rows) and kept every row. The NaNs appear only in `stat_type = 'overall'` rows, because an overall row covers every map, so there is no single map to name. |
-| **Duplicate rows?** | **No:** `df.duplicated().sum()` found 0 duplicate rows, so nothing was dropped and the data was kept as is. |
-| **Outliers? (IQR 1.5×)** | **Yes:** we winsorized `rating`, `acs`, `adr`, `k`, `d`, `a`, `fk`, `fd` by clipping them to Q1 − 1.5·IQR and Q3 + 1.5·IQR. The values are real player performances, so we capped them instead of deleting rows. |
-| **i < 10 ?** | **Yes** for charts 1 to 9: `i = i + 1` and we draw the next chart. **No** once `i` reaches 10: all 10 charts are drawn, so we go to END. |
+Flowchart 1 (Data Preprocessing) has five decision diamonds. Flowchart 2 (Data Visualization) has none: it runs from START through the ten charts to END.
 
-- **Changes we made:**
+| # | Decision (condition) | What we chose | Justification |
+|---|---|---|---|
+| 1 | **Are missing values present?** | **Yes**: fill `map_name` and `map_winner` with `'All maps'`, keep every row, then confirm 0 missing values are left. (If **No**: move on to the duplicate check.) | The 340 missing values per column appear only in `stat_type = 'overall'` rows. An overall row covers every map, so there is no single map to name, which means the gaps are structural and not data errors. Filling them with `'All maps'` keeps all rows and keeps the meaning clear. A copy of the raw data (`df_raw`) is kept for the missingness chart. |
+| 2 | **Are there duplicate rows?**  | **No**: the check found 0 duplicate rows, so we display "Duplicate rows found: 0 / No duplicate rows, nothing to drop." and move on to fixing the data types. | Every row is a unique player-match (or player-map) record, so there is nothing to remove and all rows are kept. The check stays in the pipeline because duplicated rows would double-count a player's stats and bias every average, correlation and chart. |
+| 3 | **Are outliers present?**  | **Yes**: **winsorize**, clipping each value to `Q1 − 1.5·IQR` and `Q3 + 1.5·IQR`, with bounds computed separately for each `stat_type`. All rows are kept.| The extreme values are real player performances, so deleting the rows would throw away genuine data. Capping limits their pull on means, correlations and scaling. Bounds are separate for `overall` and `map` rows because totals like `k`, `d` and `a` are naturally larger for an overall row (all maps combined); one shared bound would wrongly flag those rows. A pre-winsorizing copy (`df_before_outliers`) lets chart 8 still show the real star performances. |
+| 4 | **Are the variables categorical?**  | **Yes**: drop `event_name` and one-hot encode **`stat_type` only** (`stat_type_map`, `stat_type_overall`). | `stat_type` changes what every row *means* (all maps vs. a single map) and has only 2 values, so it adds just 2 columns. `event_name` has a single value, so it carries no information. The remaining columns (team, agent, map, stage) stay as readable text labels so charts, legends and tables show real names, and encoding them would add many columns without improving the results. |
+| 5 | **Are the variables numerical?**  | **Yes**: apply **StandardScaler** (mean 0, std 1) to the 12 performance columns (`rating, acs, k, d, a, kd_diff, kast, adr, hs_percent, fk, fd, fk_fd_diff`), then check that mean ≈ 0 and std ≈ 1. | The metrics sit on very different scales (e.g. `acs` in the hundreds vs. `rating` near 1), so standardizing puts them on equal footing for comparison. `match_id`, `player_id` and the one-hot columns are **not** scaled, because they are identifiers or 0/1 flags. Most charts use `df_clean` (taken before scaling) so the axes stay in real units. |
+
+> ### Changes Summary
   
 The final code differs from our first flowchart in the following ways.
 
-| Initial Flowchart | Final Flowchart | Why we changed it |
+| Initial flowchart | Final flowchart | Why we changed it |
 |---|---|---|
-| The code one-hot encodes `stat_type`, `map_name`, `map_winner`, `event_stage`, `player_team`, `team1` and `team2`, multi-hot encodes `agent`, and drops `event_name`. | The code only drops `event_name` and one-hot encodes `stat_type`. | The charts and PCA use numeric stats, so the extra map, team, stage and agent encodings would only add many sparse columns. |
-| The code saves each chart as `figures/viz_{i}.png`. | The code no longer saves the charts as PNG files. | Charts display inline in Colab, so saving PNG files was not needed. |
-| There's no code to keep a raw copy of the data. | Added code to keep a raw copy of the data: `df_raw = df.copy()`. | Needed to compare raw data against cleaned data in the Data Quality Report and the missingness chart (chart 6). |
-| There's no code to keep a copy of the data before winsorizing. | Added `df_before_outliers = df.copy()` right before winsorizing. | Chart 8 (boxplot) compares the data before and after outlier handling. |
-| The code winsorizes the outliers and then moves straight on to encoding. | Added a snapshot, `df_clean = df.copy()`, taken before encoding and scaling. | The charts need a readable version of the data before encoding or scaling. |
-| There's no data quality report. | Added a Data Quality Report that compares missing values in `df_raw` and `df_final`, expecting 0 after cleaning. | Added to show that the cleaning removed all missing values. |
-| There's no code to prepare a separate dataset for the charts. | Added code that takes the overall rows of `df_clean` and creates a Won/Lost `result` column. | Gives every chart one consistent subset and a Won/Lost label. |
-| The loop draws 10 charts from `df_clean`, filtered by `stat_type`. | The loop draws 10 named charts, and each one uses `overall`, `df_final`, `df_raw` or `df_before_outliers` as needed. | The chart list was finalized, and each chart uses the dataframe that suits it. |
+| **One combined flowchart** covering preprocessing and visualization. | **Two flowcharts**: Flowchart 1 (Data Preprocessing) and Flowchart 2 (Data Visualization). | Preprocessing and visualization are two separate stages. Splitting them keeps each one readable and lets Flowchart 2 show every chart in detail. |
+| Steps have **no display boxes**, only one *Inspect the data* box. | Almost every step is **followed by a display box**: inspect output, missing values left, duplicate count, data types after fixing, outlier table, encoded columns, scaled-data check, saved file shape, quality report totals. | Each display box matches something the notebook actually prints, so the flowchart and code can be compared line by line. |
+| **Outliers:** keep a copy, ask "Outliers? (IQR 1.5×)", then winsorize. | **Select the columns and keep the copy**, **calculate Q1, Q3, IQR and bounds separately for each `stat_type`**, **display** the bounds and counts, then winsorize and display the message. | Totals such as `k`, `d`, `a`, `fk` and `fd` are naturally larger in `overall` rows (all maps combined). One shared bound would flag them as outliers only because they cover more maps. |
+| **Prepare chart data:** `overall` rows of `df_clean` and a Won / Lost result per player-match. | `overall` **and map rows** of `df_clean`, a Won / Lost result, **short team names, `PLAYOFF_TEAMS`, theme and team colours**, and creates the `figures/` folder. | Map and agent charts need map-level rows, because overall rows list several agents per player (e.g. `Yoru, Sova`). The shared theme and fixed team colours keep every chart consistent. |
+| **Loop:** `i = 1`, `total = 10`, "Draw chart i", check `i < 10?`. | **No loop.** Ten charts run in sequence, each with its own *generate* box and its own *display* box. | Each chart has different variables and its own display text. Separate boxes show that clearly, and the notebook now has one code cell and one displayed chart per chart. |
+| Final step: **Save the cleaned dataset** only. | Adds **Save each chart to the figures folder** (Colab: download the cleaned CSV and `figures.zip`). | Every chart is saved as a PNG, and the cleaned data and figures can be downloaded together from Colab. |
 
 ## 🧹Preprocessing Summary
 The steps were applied in order to produce the cleaned dataset. 
