@@ -88,7 +88,7 @@ The steps were applied in order to produce the cleaned dataset.
 </p>
 
 *   **Description** - The distribution of Average Combat Score `(ACS)` for the eight playoff teams. The x-axis is `ACS` (about 50 to 330), and the y-axis is density.
-*  **Insight** - A curve shifted to the right means higher typical `ACS`; a wider spread means less consistent scoring. Where the semi-transparent bars overlap, the two teams score similarly.
+*  **Insight** - The histogram shows that most playoff teams have an `Average Combat Score (ACS)` between 130 and 230, with the highest density around 150–220. `MIBR` and `G2 Esports` show noticeable peaks in this range, while a few teams have higher ACS values above 300, indicating differences in individual combat performance.
 
 ### **Plot 2 : KDE: Density Distribution of Player Ratings by Map**
 <p align="center">
@@ -96,7 +96,7 @@ The steps were applied in order to produce the cleaned dataset.
 </p>
 
 *   **Description** - Smoothed KDE curves of player rating for seven maps, with rating on the x-axis (about 0 to 2.2) and density on the y-axis.
-*   **Insight** - Each curve is one map. Curves with a peak further right mean higher typical ratings on that map; a flatter curve means a wider spread of player performances.
+*   **Insight** - Most of the maps shows player ratings concentrated between 1.00 and 1.25 that indicates manny players perform at this range. `Bind` has the sharpest peak above 1.50, while `Haven` has flatter distribution. 
 
 ### **Plot 3: Scatter Plot — Relationship Between Kill-Death Difference and Rating by Outcome**
 <p align="center">
@@ -104,7 +104,8 @@ The steps were applied in order to produce the cleaned dataset.
 </p>
 
 *  **Description** - Each point is a player-map performance, colored by whether that player's team won or lost the map.
-* **Insight** - Points trending up and to the right mean a better kill–death difference goes with a higher rating. Compare the teal (Won) and orange (Lost) clouds to see how far winners separate from losers.
+* **Insight** - The plot shows a strong positive correlation between kill-death difference and player rating. Players with higher kill-death difference tend to achieve higher rating and most winning performances.
+
 
 ### **Plot 4: Bar Plot — Agent Pick Frequency Across All Maps**
 <p align="center">
@@ -112,7 +113,7 @@ The steps were applied in order to produce the cleaned dataset.
 </p>
 
 *  **Description** - Chart shows how often each agent was picked across all maps. The x-axis lists 23 agents, the y-axis shows pick count and the five most-picked agents are highlighted.
-* **Insight** - Bars are sorted from the most to the least picked agent. The dark bars are the top 5 agents reused in charts 5 and 8.
+* **Insight** - The most frequent picked agent is `Omen(141)` appearances, followed by `Sova(94)` and `Yoru(93)`. Meanwhile, `Skye` has the fewest picks with only 3 appearances. This suggest that certain agents are favorable among player. 
 
 ### **Plot 5: Pair Plot — Survival and Support Performance by Top 5 Agent**
 <p align="center">
@@ -120,7 +121,7 @@ The steps were applied in order to produce the cleaned dataset.
 </p>
 
 *  **Description** - The plot uses deaths, assists, KAST, and ADR for the five most frequently picked agents.
-* **Insight** - The diagonal shows each metric's distribution per agent; the off-diagonal panels show how two metrics relate. Look for agent colours that cluster apart from the others.
+* **Insight** - `KAST` and `ADR` have positive correlation which means that players who contribute effectively tend to deal more damage. While, `Assist` and `Death` suggest weak relationship.
 
 ### **Plot 6: Correlation Heatmap — Correlation Between Overall Combat Performance Metrics**
 <p align="center">
@@ -128,7 +129,7 @@ The steps were applied in order to produce the cleaned dataset.
 </p>
 
 *  **Description** - Pearson correlations are calculated from overall player rows. Only the lower triangle is shown, so each pair appears once, and derived difference metrics are excluded to avoid redundant comparisons.
-* **Insight** - Red cells are positive correlations and blue cells are negative ones; the darker the colour, the stronger the relationship `(r close to ±1)`. Only the lower triangle is shown.
+* **Insight** -The heatmap shows a strong positive correlation between `ACS` and `ADR` with `r=0.97`. `Rating` is also strongly correlated with `ACS` `(r=0.85)` and  `ADR` `(0.83)`. In contrast, `HS%` has weak relationship with other metrics.
 
 ### **Plot 7: Missingness Plot — Before vs After**
 <p align="center">
@@ -136,7 +137,7 @@ The steps were applied in order to produce the cleaned dataset.
 </p>
 
 *  **Description** - Each column of the dataset is one vertical strip and each row is one record; black cells are missing values. The left panel is the raw data `(df_raw)` and the right panel is the cleaned data `(df_final)`. Columns with gaps are labelled with their % missing. Column names are rotated 90° and centred under their own strip so both panels line up.
-* **Insight** - Each vertical strip is one column and each row is one record. Black cells in the left panel are the gaps in the raw data; the right panel should contain none.
+* **Insight** - In initial dataset, there were 680 missing cells, mainly in the `map_name` and `map_winner` columns. After data cleaning, all missing values were handled with 0 missing cells.
 
 ### **Plot 8: Violin Plot — Player Rating Distribution by Top 5 Agent**
 <p align="center">
@@ -144,14 +145,15 @@ The steps were applied in order to produce the cleaned dataset.
 </p>
 
 *  **Description** - Each violin shows the full shape of an agent's rating distribution, with the box inside marking the median and the middle 50%. Agents are ordered from the highest to the lowest median rating. This uses the pre-winsorized data, so star performances stay visible in the tails.
-* **Insight** - Wider parts of a violin mean more players at that rating. The inner box marks the median and middle 50%, and the long tails show the star (or poor) performances kept by using pre-winsorized data. 
+* **Insight** - It shows that player ratings are concentrated around 1.0, while some extend toward 1.5 and above. `Yoru` has wider distribution while `Sova`has the highest peak.
+
 ### **Plot 9: Temporal Line Plot — Team Average Rating by Event Stage**
 <p align="center">
   <img width="1277" height="694" alt="Temporal Line Plot of Player Performance Over Time" src="https://github.com/user-attachments/assets/c0c46029-7586-4f5e-9d4c-c152d4dc8956" />
 </p>
 
 *  **Description** - The x-axis follows the tournament stage order determined by each stage's first match date. The eight most active teams are shown to avoid a crowded legend.
-* **Insight** - Each line is one team. Rising lines mean a team's players performed better as the event went on; the grey band marks the playoff stages.
+* **Insight** - EThe line plot shows that team average rating varies across event stages. `NRG` and `MIBR` reach the highest rating between 1.2-1.3. `GIANTX` experinces a notable drop during the playoffs.
 
 ### **Plot 10: Team Heatmap — Team Performance Profiles**
 <p align="center">
@@ -159,7 +161,7 @@ The steps were applied in order to produce the cleaned dataset.
 </p>
 
 *  **Description** - Each cell shows a team's mean metric standardized across teams (z-score within each metric). This puts `rating`, `ACS`, `ADR`, and `KAST` on a comparable color scale.
-* **Insight** - Red cells are above the all-team average for that metric and blue cells are below it. Teams are sorted with the strongest overall profile at the top.
+* **Insight** - The heatmap shows `MIBR` has the highest strongest overall performance having the highest standardized values in `Rating`, `ACS` and `KAST`. Followed by `NRG` and `Paper Rex`. In contrast, `Bilibili Gaming` and `Rex Regumm Qeon` have the lowest values. 
 
 ## 💡Key Insights
 1. **Performance is centered at average.** Player rating averages about 0.99, with most players between 0.85 and 1.14.
